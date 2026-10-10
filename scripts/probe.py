@@ -1,7 +1,12 @@
 """API 구조 탐색용: 응답의 '구조(키/타입)'와 오류 메시지만 출력하고 실제 데이터 값은 출력하지 않는다."""
 import json, os, sys, urllib.request
 
-KEY = os.environ["KALODATA_API_KEY"]
+RAW = os.environ.get("KALODATA_API_KEY", "")
+KEY = RAW.strip()
+# 키 값은 출력하지 않고 형태만 점검
+print(f"[key check] length={len(KEY)}, ascii={KEY.isascii()}, had_whitespace={RAW != KEY}, inner_space={' ' in KEY}")
+if not KEY.isascii() or any(c.isspace() for c in KEY):
+    sys.exit("키에 한글/공백 등 허용되지 않는 문자가 있습니다. Secret에 키 값만 넣어주세요.")
 BASE = "https://www.kalodata.com/openapi/v1/tiktok/"
 EPS = ["product/rank","product/detail","shop/rank","shop/detail","creator/rank","creator/detail",
        "creator/avatar-images","video/rank","video/detail","video/url","livestream/rank","livestream/detail"]
