@@ -1,0 +1,17 @@
+name: API probe
+on:
+  workflow_dispatch:
+    inputs:
+      bodies:
+        description: "엔드포인트별 요청 body (JSON)"
+        required: false
+        default: "{}"
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python scripts/probe.py
+        env:
+          KALODATA_API_KEY: ${{ secrets.KALODATA_API_KEY }}
+          PROBE_BODIES: ${{ inputs.bodies }}
